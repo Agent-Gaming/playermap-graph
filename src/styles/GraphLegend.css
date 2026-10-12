@@ -1,0 +1,38 @@
+.containerLegend {
+    position: absolute;
+    right: 400px;
+    bottom: 30px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    background-color: #00eaff;
+}
+
+.containerLabelLegend {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.dotOrange, .dotGreen, .dotBlue {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+}
+
+.dotOrange {
+    background-color: orange;
+}
+
+.dotGreen {
+    background-color: green;
+}
+
+.dotBlue {
+    background-color: rgb(0, 162, 255);
+}
+
+.label {
+    font-size: 14px;
+    color: #FFFFFF;
+}

@@ -4,7 +4,7 @@
   height: 100vh;
   display: flex;
   flex-direction: column;
-  background-color: #1a1a1a;
+  background-color: #ff0000;
 }
 
 .App-header {
@@ -57,7 +57,7 @@ canvas {
 .force-graph-container {
   width: 100% !important;
   height: 100% !important;
-  background-color: #1a1a1a;
+  background-color: #ff0000;
 }
 
 .navigation-button {
@@ -71,7 +71,7 @@ canvas {
 }
 
 .agent-btn {
-  background: #ffd32a;
+  background: #2aa3ff;
   color: #18181b;
   font-weight: bold;
   text-transform: uppercase;

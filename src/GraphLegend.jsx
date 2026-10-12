@@ -4,97 +4,62 @@ import { NODE_COLORS } from "./nodeColors";
 const GraphLegend = () => {
   return (
     <div
-      style={{
-        position: "absolute",
-        bottom: 10,
-        right: 5,
-        zIndex: 1000,
-      }}
-    >
-      <h4
+    style={{
+      position: "absolute",
+      right: "34%",
+      bottom: "30px",
+      color: "#808080",
+      fontSize: "13px",
+    }}>
+        <div
         style={{
-          margin: "0 0 4px 0",
-          fontSize: "18px",
-          color: "#ffd32a",
-          fontWeight: "bold",
-          letterSpacing: "0.5px",
-          textTransform: "uppercase",
-        }}
-      >
-        LEGEND
-      </h4>
-      <ul
-        style={{
-          listStyle: "none",
-          margin: 0,
           display: "flex",
-          flexDirection: "column",
-          gap: "12px",
-          borderRadius: "10px",
-          padding: "16px 16px",
-        }}
-      >
-        <li
+          alignItems: "center",
+          gap: "4px"
+        }}>
+          <div
           style={{
-            display: "flex",
-            alignItems: "center",
-            gap: "12px",
-            color: "#fff",
+            width: "10px",
+            height: "10px",
+            borderRadius: "50%",
+            backgroundColor: "#ff8c00",
           }}
-        >
-          <span
+          ></div>
+          <span>Subject</span>
+        </div>
+
+        <div
+        style={{
+          display: "flex",
+          alignItems: "center",
+          gap: "4px"
+        }}>
+          <div
             style={{
-              width: "20px",
-              height: "20px",
-              backgroundColor: NODE_COLORS.SUBJECT,
+              width: "10px",
+              height: "10px",
+              backgroundColor: "#4dff00",
+            }}
+          ></div>
+          <span>Object</span>
+        </div>
+
+        <div
+        style={{
+          display: "flex",
+          alignItems: "center",
+          gap: "4px"
+        }}>
+          <div
+            style={{
+              width: "10px",
+              height: "2px",
               borderRadius: "50%",
-              display: "inline-block",
-              boxShadow: "0 2px 8px rgba(0,0,0,0.18)",
+              backgroundColor: "#00eaff",
             }}
-          ></span>
-          <span style={{ fontSize: "15px" }}>Subject</span>
-        </li>
-        <li
-          style={{
-            display: "flex",
-            alignItems: "center",
-            gap: "12px",
-            color: "#fff",
-          }}
-        >
-          <span
-            style={{
-              width: "20px",
-              height: "20px",
-              backgroundColor: NODE_COLORS.OBJECT,
-              borderRadius: "4px",
-              display: "inline-block",
-              boxShadow: "0 2px 8px rgba(0,0,0,0.18)",
-            }}
-          ></span>
-          <span style={{ fontSize: "15px" }}>Object</span>
-        </li>
-        <li
-          style={{
-            display: "flex",
-            alignItems: "center",
-            gap: "12px",
-            color: "#fff",
-          }}
-        >
-          <span
-            style={{
-              width: "20px",
-              height: "8px",
-              backgroundColor: NODE_COLORS.PREDICATE,
-              borderRadius: "4px",
-              display: "inline-block",
-              boxShadow: "0 2px 8px rgba(0,0,0,0.18)",
-            }}
-          ></span>
-          <span style={{ fontSize: "15px" }}>Predicate</span>
-        </li>
-      </ul>
+          ></div>
+          <span>Predicate</span>
+        </div>
     </div>
   );
 };
