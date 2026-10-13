@@ -28,6 +28,48 @@ const TOOLTIP_OFFSET_Y = 32;
 // Cache d'images global
 const imageCache = new Map();
 
+// Charge les images nodes avec un nombre de requêtes en vol limité — un
+// graphe avec ~25 nodes qui tirent chacun une image IPFS en même temps
+// se fait rate-limiter (429) par le gateway public Pinata. Pas de
+// crossOrigin ici : ces images ne sont jamais que dessinées via
+// ctx.drawImage sur un canvas 2D (jamais relues pixel par pixel), donc le
+// CORS n'est pas requis pour les afficher — l'exiger en faisait échouer
+// l'affichage pur et simple dès que le gateway ne renvoie pas d'en-tête
+// Access-Control-Allow-Origin (ce que gateway.pinata.cloud ne fait pas).
+const MAX_CONCURRENT_IMAGE_LOADS = 6;
+let activeImageLoads = 0;
+const imageLoadQueue = [];
+
+function runNextQueuedLoad() {
+  if (activeImageLoads >= MAX_CONCURRENT_IMAGE_LOADS) return;
+  const next = imageLoadQueue.shift();
+  if (next) next();
+}
+
+function queueImageLoad(url, onLoad, onError) {
+  const img = new window.Image();
+  const start = () => {
+    activeImageLoads++;
+    img.onload = () => {
+      activeImageLoads--;
+      onLoad(img);
+      runNextQueuedLoad();
+    };
+    img.onerror = (err) => {
+      activeImageLoads--;
+      if (onError) onError(err);
+      runNextQueuedLoad();
+    };
+    img.src = url;
+  };
+  if (activeImageLoads < MAX_CONCURRENT_IMAGE_LOADS) {
+    start();
+  } else {
+    imageLoadQueue.push(start);
+  }
+  return img;
+}
+
 const Graph2D = ({
   graphData,
   onNodeClick,
@@ -43,7 +85,6 @@ const Graph2D = ({
   const [hoveredNode, setHoveredNode] = useState(null);
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
   const [dimensions, setDimensions] = useState({ width: 100, height: 100 });
-  const [loadedImages, setLoadedImages] = useState(new Map());
 
   // Gérer le redimensionnement avec useEffect
   useEffect(() => {
@@ -72,24 +113,6 @@ const Graph2D = ({
       if (observer) observer.disconnect();
     };
   }, []);
-
-  // Précharger les images au montage du composant
-  useEffect(() => {
-    if (!graphData?.nodes) return;
-    graphData.nodes.forEach((node) => {
-      if (node.image && !loadedImages.has(node.image)) {
-        const img = new Image();
-        img.crossOrigin = "anonymous";
-        img.src = node.image;
-        img.onload = () => {
-          setLoadedImages((prev) => new Map(prev).set(node.image, img));
-          if (fgRef.current && typeof fgRef.current.emit === 'function') {
-            fgRef.current.emit("redraw");
-          }
-        };
-      }
-    });
-  }, [graphData.nodes]);
 
   const handleZoom = useCallback(() => {
     requestAnimationFrame(() => {
@@ -175,17 +198,13 @@ const Graph2D = ({
                 ctx.stroke();
                 ctx.clip();
                 if (!node.__img) {
-                  const img = new window.Image();
-                  img.crossOrigin = "anonymous";
-                  img.src = node.image;
-                  img.onload = () => {
+                  node.__imgLoaded = false;
+                  node.__img = queueImageLoad(node.image, () => {
                     node.__imgLoaded = true;
                     if (fgRef && fgRef.current && typeof fgRef.current.emit === 'function') {
                       fgRef.current.emit("redraw");
                     }
-                  };
-                  node.__img = img;
-                  node.__imgLoaded = false;
+                  });
                 }
                 if (node.__imgLoaded) {
                   const isCommunity = node.image === GREEN_SQUARE_PLACEHOLDER;
@@ -225,16 +244,13 @@ const Graph2D = ({
           } else {
             if (node.image) {
               if (!node.__img) {
-                const img = new window.Image();
-                img.src = node.image;
-                img.onload = () => {
+                node.__imgLoaded = false;
+                node.__img = queueImageLoad(node.image, () => {
                   node.__imgLoaded = true;
                   if (fgRef && fgRef.current && typeof fgRef.current.emit === 'function') {
                     fgRef.current.emit("redraw");
                   }
-                };
-                node.__img = img;
-                node.__imgLoaded = false;
+                });
               }
               ctx.save();
               ctx.beginPath();
