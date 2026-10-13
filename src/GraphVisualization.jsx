@@ -276,17 +276,19 @@ const GraphVisualization = ({
         />
       )}
 
+{/* 
       <div
         style={{
+          left: "2%",
+          marginRight: "40px",
+          bottom: "30px",
           position: "absolute",
-          bottom: "70px",
-          left: "16px",
           zIndex: 50,
         }}
       >
         <ViewModeSelector viewMode={viewMode} onViewModeChange={setViewMode} />
       </div>
-
+*/}
       <div
         style={{
           position: "absolute",
@@ -340,10 +342,10 @@ const GraphVisualization = ({
         {!filtersOpen && (
           <button
             style={{
-              background: "#ffd32a",
-              color: "#18181b",
-              border: "none",
-              borderRadius: 12,
+              background: "#111111",
+              color: "#FFFFFF",
+              border: "1px solid #1d1d1d",
+              borderRadius: 30,
               top: 10,
               width: 120,
               height: 54,

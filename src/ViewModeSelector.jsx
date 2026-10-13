@@ -17,15 +17,9 @@ const ViewModeSelector = ({ viewMode, onViewModeChange }) => {
       style={{
         display: "flex",
         flexDirection: "column",
-        alignItems: "flex-start",
         gap: "6px",
-        left: "16px",
-        position: "relative",
       }}
     >
-      <label htmlFor="viewMode" style={{ color: "#ffd32a", fontWeight: "bold", textTransform: "uppercase", fontSize: "16px" }}>
-        VIEW
-      </label>
       
       <div style={{ position: "relative" }} ref={dropdownRef}>
         <button
@@ -51,11 +45,9 @@ const ViewModeSelector = ({ viewMode, onViewModeChange }) => {
           <div
             style={{
               position: "absolute",
-              left: "100%",
-              top: 0,
-              marginLeft: "8px",
+              bottom: "100%",
               display: "flex",
-              flexDirection: "row",
+              flexDirection: "column",
               gap: "6px",
               padding: "3px",
               zIndex: 1000,
